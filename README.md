@@ -1,3 +1,4 @@
-# Orbital-Debris-Tracker
+# To Activate Environment
 
-conda activate orbitenv
+*`.\orbitenv\Scripts\activate`
+
