@@ -1,13 +1,24 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from pydantic import BaseModel
+from datetime import datetime
 
 app = FastAPI()
 
-class RiskRequest(BaseModel):
-    satellite_id: str
-    tle: list[str]  # or custom TLE fields
+class SatelliteInput(BaseModel):
+    norad_id: int
 
-@app.post("/predict-risk")
-def predict_risk(data: RiskRequest):
-    # Call your ML model here (e.g., LSTM or SVM)
-    return {"risk_score": 0.87}
+class PredictionInput(BaseModel):
+    satellite_1: SatelliteInput
+    satellite_2: SatelliteInput
+
+class PredictionRequest(BaseModel):
+    sat1_id: int
+    sat2_id: int
+@app.post("/predict")
+def predict(data: PredictionRequest):
+    # Simulate a prediction
+    return {
+        "miss_distance": 120.5,
+        "probability": 0.0000045,
+        "tca": "2025-08-01T10:30:00Z"
+    }

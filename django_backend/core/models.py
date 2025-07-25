@@ -27,4 +27,13 @@ class RiskReport(models.Model):
 
     def __str__(self):
         return f"Risk between {self.satellite_1} and {self.satellite_2} on {self.time_of_closest_approach}"
+    
+
+class PredictionReport(models.Model):
+    sat1_id = models.CharField(max_length=255)
+    sat2_id = models.CharField(max_length=255)
+    miss_distance = models.FloatField()
+    probability = models.FloatField()
+    tca = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
