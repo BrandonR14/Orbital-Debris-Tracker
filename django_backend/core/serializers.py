@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Satellite, TLEEntry, RiskReport
+from .models import Satellite, TLEEntry, RiskReport, PredictionReport
 
 class SatelliteSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,4 +14,9 @@ class TLEEntrySerializer(serializers.ModelSerializer):
 class RiskReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = RiskReport
+        fields = '__all__'
+
+class PredictionReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PredictionReport
         fields = '__all__'

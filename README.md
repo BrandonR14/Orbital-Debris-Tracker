@@ -4,6 +4,9 @@
 
 # To Activate Everything
 
+Django:
+`python manage.py runserver`
+
 *FastAPI:
 *`uvicorn main:app --reload --port 8001`
 
