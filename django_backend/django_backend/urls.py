@@ -18,14 +18,28 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from core.views import SatelliteViewSet, TLEEntryViewSet, RiskReportViewSet
+from rest_framework_simplejwt.views import TokenRefreshView
+from core.views import (
+    SatelliteViewSet, TLEEntryViewSet, RiskReportViewSet, PredictionReportViewSet,
+    register_view, login_view, logout_view, user_profile_view, create_prediction_report,
+    trigger_prediction, get_prediction_status
+)
 
 router = DefaultRouter()
 router.register(r'satellites', SatelliteViewSet)
 router.register(r'tles', TLEEntryViewSet)
 router.register(r'reports', RiskReportViewSet)
+router.register(r'prediction-reports', PredictionReportViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('api/', include(router.urls)),
+    path('api/auth/register/', register_view, name='register'),
+    path('api/auth/login/', login_view, name='login'),
+    path('api/auth/logout/', logout_view, name='logout'),
+    path('api/auth/profile/', user_profile_view, name='profile'),
+    path('api/auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/trigger-prediction/', trigger_prediction, name='trigger_prediction'),
+    path('api/prediction-status/<str:task_id>/', get_prediction_status, name='prediction_status'),
+    path('api/prediction-report/', create_prediction_report, name='create_prediction_report'),
 ]
