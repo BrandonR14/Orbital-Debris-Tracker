@@ -1,0 +1,7 @@
+fastapi
+uvicorn[standard]
+pydantic
+sgp4
+numpy
+requests
+python-dotenv

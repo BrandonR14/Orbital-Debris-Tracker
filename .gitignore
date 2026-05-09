@@ -1,0 +1,14 @@
+# Virtual environment
+orbitenv/
+venv/
+.env/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment files
+.env
+
+# Django stuff 
+db.sqlite3
