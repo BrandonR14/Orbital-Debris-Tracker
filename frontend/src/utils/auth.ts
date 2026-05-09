@@ -66,26 +66,33 @@ export const isAuthenticated = (): boolean => {
   return getAccessToken() !== null;
 };
 
-// API call with authentication
+// API call with authentication — automatically refreshes the access token on 401
 export const authenticatedFetch = async (
   url: string,
   options: RequestInit = {}
 ): Promise<Response> => {
-  const token = getAccessToken();
-  
-  const headers = {
-    'Content-Type': 'application/json',
-    ...options.headers,
+  const makeRequest = (token: string | null) => {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      ...(options.headers as Record<string, string>),
+    };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    return fetch(url, { ...options, headers });
   };
 
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+  let response = await makeRequest(getAccessToken());
+
+  if (response.status === 401) {
+    const refreshed = await refreshAccessToken();
+    if (refreshed) {
+      response = await makeRequest(getAccessToken());
+    } else {
+      clearAuthData();
+      if (typeof window !== 'undefined') window.location.href = '/login';
+    }
   }
 
-  return fetch(url, {
-    ...options,
-    headers,
-  });
+  return response;
 };
 
 // Refresh token

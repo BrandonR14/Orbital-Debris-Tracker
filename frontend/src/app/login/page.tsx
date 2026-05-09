@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Eye, EyeOff, Mail, Lock, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, Loader2, ArrowLeft } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -35,7 +35,7 @@ export default function LoginPage() {
         localStorage.setItem('refresh_token', data.tokens.refresh);
         localStorage.setItem('user', JSON.stringify(data.user));
         
-        router.push('/predict');
+        router.push('/');
       } else {
         setError(data.detail || 'Login failed. Please check your credentials.');
       }
@@ -49,6 +49,14 @@ export default function LoginPage() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-black/60 p-6">
       <div className="w-full max-w-md">
+        {/* Back to home */}
+        <div className="mb-6">
+          <Link href="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-yellow-400 transition-colors text-sm">
+            <ArrowLeft className="h-4 w-4" />
+            Back to home
+          </Link>
+        </div>
+
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-yellow-400 mb-2">Welcome Back</h1>

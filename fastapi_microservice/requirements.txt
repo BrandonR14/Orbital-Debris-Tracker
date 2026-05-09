@@ -5,3 +5,6 @@ sgp4
 numpy
 requests
 python-dotenv
+scikit-learn
+joblib
+pandas

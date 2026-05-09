@@ -21,8 +21,8 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView
 from core.views import (
     SatelliteViewSet, TLEEntryViewSet, RiskReportViewSet, PredictionReportViewSet,
-    register_view, login_view, logout_view, user_profile_view, create_prediction_report,
-    trigger_prediction, get_prediction_status
+    register_view, login_view, logout_view, user_profile_view,
+    trigger_prediction, get_prediction_status, prediction_history, satellite_tle_data,
 )
 
 router = DefaultRouter()
@@ -41,5 +41,6 @@ urlpatterns = [
     path('api/auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/trigger-prediction/', trigger_prediction, name='trigger_prediction'),
     path('api/prediction-status/<str:task_id>/', get_prediction_status, name='prediction_status'),
-    path('api/prediction-report/', create_prediction_report, name='create_prediction_report'),
+    path('api/prediction-history/', prediction_history, name='prediction_history'),
+    path('api/satellite-tle-data/', satellite_tle_data, name='satellite_tle_data'),
 ]

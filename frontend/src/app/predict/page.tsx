@@ -1,10 +1,25 @@
 'use client';
 
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import ProtectedRoute from '@/components/ProtectedRoute';
-import { logout, getStoredUser } from '@/utils/auth';
-import { Loader2, LogOut, Satellite, Target, BarChart3 } from 'lucide-react';
+import { logout, getStoredUser, authenticatedFetch } from '@/utils/auth';
+import SatelliteCombobox from '@/components/SatelliteCombobox';
+import Link from 'next/link';
+import { Loader2, LogOut, Satellite, Target, BarChart3, History } from 'lucide-react';
+
+const SatelliteGlobe = dynamic(() => import('@/components/SatelliteGlobe'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center h-full min-h-[400px] bg-black/30 rounded-xl border border-yellow-500/20">
+      <div className="text-center">
+        <div className="w-8 h-8 border-2 border-yellow-400 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+        <p className="text-gray-400 text-sm">Loading globe…</p>
+      </div>
+    </div>
+  ),
+});
 
 export default function PredictPage() {
   const router = useRouter();
@@ -22,17 +37,27 @@ export default function PredictPage() {
 
   const handlePrediction = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError('');
 
+    if (!sat1Id || !sat2Id) {
+      setError('Please select both satellites before running a prediction');
+      return;
+    }
+    const n1 = parseInt(sat1Id, 10);
+    const n2 = parseInt(sat2Id, 10);
+    if (isNaN(n1) || n1 <= 0 || isNaN(n2) || n2 <= 0) {
+      setError('Invalid NORAD ID — enter a positive integer or pick from the list');
+      return;
+    }
+    if (sat1Id === sat2Id) {
+      setError('The two satellites must be different');
+      return;
+    }
+
+    setLoading(true);
     try {
-      // Trigger Celery task for prediction
-      const response = await fetch('http://127.0.0.1:8000/api/trigger-prediction/', {
+      const response = await authenticatedFetch('http://127.0.0.1:8000/api/trigger-prediction/', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-        },
         body: JSON.stringify({
           sat1_id: parseInt(sat1Id),
           sat2_id: parseInt(sat2Id),
@@ -41,13 +66,12 @@ export default function PredictPage() {
 
       if (response.ok) {
         const data = await response.json();
-        // Redirect to results page with the task ID
         router.push(`/results?task_id=${data.task_id}`);
       } else {
         const errorData = await response.json();
         setError(errorData.detail || 'Failed to start prediction');
       }
-    } catch (err) {
+    } catch {
       setError('Network error. Please try again.');
     } finally {
       setLoading(false);
@@ -62,12 +86,21 @@ export default function PredictPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-4">
               <div className="flex items-center space-x-4">
-                <Satellite className="h-8 w-8 text-yellow-400" />
-                <h1 className="text-2xl font-bold text-white">Orbital Debris Tracker</h1>
+                <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+                  <Satellite className="h-8 w-8 text-yellow-400" />
+                  <h1 className="text-2xl font-bold text-white">Orbital Debris Tracker</h1>
+                </Link>
                 <span className="text-gray-300">|</span>
                 <span className="text-gray-300">Prediction Tool</span>
               </div>
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-3">
+                <button
+                  onClick={() => router.push('/history')}
+                  className="flex items-center space-x-2 text-gray-300 hover:text-yellow-400 transition-colors px-3 py-2"
+                >
+                  <History className="h-4 w-4" />
+                  <span>History</span>
+                </button>
                 <span className="text-gray-300">Welcome, {user?.username}</span>
                 <button
                   onClick={handleLogout}
@@ -81,83 +114,104 @@ export default function PredictPage() {
           </div>
         </header>
 
-        {/* Main Content */}
-        <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="bg-navy-900/80 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-yellow-500/20">
-            <div className="flex items-center space-x-3 mb-6">
-              <Target className="h-8 w-8 text-yellow-400" />
-              <h2 className="text-3xl font-bold text-white">Collision Risk Prediction</h2>
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-start">
+
+            {/* Globe — left 3 columns */}
+            <div
+              className="lg:col-span-3 bg-navy-900/80 backdrop-blur-lg rounded-2xl border border-yellow-500/20 overflow-hidden"
+              style={{ minHeight: '560px' }}
+            >
+              <div className="px-5 py-4 border-b border-yellow-500/10 flex items-center space-x-2">
+                <Satellite className="h-5 w-5 text-yellow-400" />
+                <h2 className="text-white font-semibold">Live Satellite Positions</h2>
+                <span className="text-gray-500 text-xs ml-auto hidden sm:block">
+                  From your prediction history · updates every 5 s
+                </span>
+              </div>
+              <div style={{ height: '500px' }}>
+                <SatelliteGlobe />
+              </div>
             </div>
-            
-            {error && (
-              <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
-                <p className="text-red-400 text-sm">{error}</p>
-              </div>
-            )}
 
-            <form onSubmit={handlePrediction} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-yellow-400">
-                    Satellite 1 ID
-                  </label>
-                  <input
-                    type="number"
-                    className="w-full px-4 py-3 bg-black/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200"
-                    placeholder="Enter satellite 1 ID"
-                    value={sat1Id}
-                    onChange={(e) => setSat1Id(e.target.value)}
-                    required
-                  />
+            {/* Prediction form — right 2 columns */}
+            <div className="lg:col-span-2">
+              <div className="bg-navy-900/80 backdrop-blur-lg rounded-2xl p-6 shadow-2xl border border-yellow-500/20">
+                <div className="flex items-center space-x-3 mb-5">
+                  <Target className="h-7 w-7 text-yellow-400" />
+                  <h2 className="text-2xl font-bold text-white">Collision Risk Prediction</h2>
                 </div>
 
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-yellow-400">
-                    Satellite 2 ID
-                  </label>
-                  <input
-                    type="number"
-                    className="w-full px-4 py-3 bg-black/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200"
-                    placeholder="Enter satellite 2 ID"
-                    value={sat2Id}
-                    onChange={(e) => setSat2Id(e.target.value)}
-                    required
-                  />
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 text-black py-3 px-4 rounded-lg font-medium hover:from-yellow-600 hover:to-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 focus:ring-offset-black transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="h-5 w-5 animate-spin" />
-                    <span>Starting prediction analysis...</span>
-                  </>
-                ) : (
-                  <>
-                    <Target className="h-5 w-5" />
-                    <span>Start Collision Prediction</span>
-                  </>
+                {error && (
+                  <div className="mb-5 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
+                    <p className="text-red-400 text-sm">{error}</p>
+                  </div>
                 )}
-              </button>
-            </form>
 
-            {/* Instructions */}
-            <div className="mt-8 p-6 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-              <div className="flex items-center space-x-3 mb-4">
-                <BarChart3 className="h-6 w-6 text-blue-400" />
-                <h3 className="text-lg font-semibold text-white">How it works</h3>
-              </div>
-              <div className="text-gray-300 text-sm space-y-2">
-                <p>1. Enter the NORAD IDs of two satellites you want to analyze</p>
-                <p>2. Our system will calculate collision probability using orbital mechanics</p>
-                <p>3. Results will show miss distance, collision probability, and time of closest approach</p>
-                <p>4. You'll be redirected to view detailed results</p>
+                <form onSubmit={handlePrediction} className="space-y-5">
+                  <SatelliteCombobox
+                    label="Satellite 1"
+                    placeholder="Search name or enter NORAD ID…"
+                    value={sat1Id}
+                    onChange={setSat1Id}
+                  />
+
+                  <SatelliteCombobox
+                    label="Satellite 2"
+                    placeholder="Search name or enter NORAD ID…"
+                    value={sat2Id}
+                    onChange={setSat2Id}
+                  />
+
+                  <p className="text-xs text-gray-500">
+                    Can&apos;t find a satellite?{' '}
+                    <a
+                      href="https://celestrak.org/satcat/search.php"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-yellow-400 hover:text-yellow-300 underline underline-offset-2 transition-colors"
+                    >
+                      Browse the full Celestrak catalog ↗
+                    </a>
+                  </p>
+
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 text-black py-3 px-4 rounded-lg font-medium hover:from-yellow-600 hover:to-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 focus:ring-offset-black transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                  >
+                    {loading ? (
+                      <>
+                        <Loader2 className="h-5 w-5 animate-spin" />
+                        <span>Starting analysis…</span>
+                      </>
+                    ) : (
+                      <>
+                        <Target className="h-5 w-5" />
+                        <span>Start Collision Prediction</span>
+                      </>
+                    )}
+                  </button>
+                </form>
+
+                <div className="mt-6 p-5 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+                  <div className="flex items-center space-x-3 mb-3">
+                    <BarChart3 className="h-5 w-5 text-blue-400" />
+                    <h3 className="text-base font-semibold text-white">How it works</h3>
+                  </div>
+                  <ol className="text-gray-300 text-sm space-y-1 list-decimal list-inside">
+                    <li>Fetches latest TLE data from Space-Track.org</li>
+                    <li>Propagates orbits over 7 days using SGP4</li>
+                    <li>Finds TCA with 1-second precision</li>
+                    <li>Random Forest ML classifies conjunction risk</li>
+                  </ol>
+                  <p className="text-gray-500 text-xs mt-3">
+                    Search by name, or type any NORAD ID directly.
+                  </p>
+                </div>
               </div>
             </div>
+
           </div>
         </main>
       </div>

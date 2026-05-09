@@ -46,10 +46,21 @@ class RiskReport(models.Model):
     
 
 class PredictionReport(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='predictions')
     sat1_id = models.CharField(max_length=255)
     sat2_id = models.CharField(max_length=255)
+    sat1_name = models.CharField(max_length=100, blank=True, default='')
+    sat2_name = models.CharField(max_length=100, blank=True, default='')
     miss_distance = models.FloatField()
     probability = models.FloatField()
     tca = models.DateTimeField()
+    relative_velocity = models.FloatField(null=True, blank=True)
+    avg_altitude = models.FloatField(null=True, blank=True)
+    time_to_tca_hours = models.FloatField(null=True, blank=True)
+    risk_label = models.CharField(max_length=10, blank=True, default='')
+    risk_probabilities = models.JSONField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.sat1_name or self.sat1_id} vs {self.sat2_name or self.sat2_id} — {self.risk_label}"
 
