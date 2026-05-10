@@ -270,8 +270,31 @@ Orbital-Debris-Tracker/
 <img width="1856" height="901" alt="Image" src="https://github.com/user-attachments/assets/f63c3097-61a6-4a54-8236-a15a2dc26d9e" />
 
 ### Home Page Preview:
-*(demo video — too large for GitHub; run locally to see the live globe)*
 
-### Prediction Preview:
-*(demo video — too large for GitHub; run locally to see the prediction pipeline)*
+https://github.com/user-attachments/assets/7f192347-82cf-47ec-9bee-7f337e3960b3
+
+### Prediction Page:
+<img width="2528" height="1221" alt="image" src="https://github.com/user-attachments/assets/341d9b41-a7d6-4587-93cc-dc7d0eb44ac3" />
+
+### Live Satellite:
+
+
+https://github.com/user-attachments/assets/adb81d8f-33aa-4292-8540-e7a9e2aa46d6
+
+### Predction Exmaple with GLAST (33053) and LANDSAT 9 (49260):
+
+
+https://github.com/user-attachments/assets/ffd7c67d-036a-4378-ba2e-334cb7ac464f
+
+### Prediciton History:
+
+<img width="1435" height="819" alt="image" src="https://github.com/user-attachments/assets/149e6a31-4155-4145-a34a-bef8621a062e" />
+
+### Updated Satellite:
+
+
+https://github.com/user-attachments/assets/6c84a839-762e-4d33-8f1f-b2c07dbfc186
+
+
+
 ---
