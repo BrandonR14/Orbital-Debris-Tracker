@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { getStoredUser, logout, authenticatedFetch } from '@/utils/auth';
 import Link from 'next/link';
 import {
   Loader2, LogOut, Satellite, BarChart3, CheckCircle,
-  XCircle, ArrowLeft, History, Zap, Globe, Clock,
+  XCircle, ArrowLeft, History, Zap, Globe,
 } from 'lucide-react';
 
 interface RiskProbabilities {
@@ -68,7 +68,7 @@ export default function ResultsPage() {
     router.push('/login');
   };
 
-  const checkTaskStatus = async () => {
+  const checkTaskStatus = useCallback(async () => {
     if (!taskId) {
       setError('No task ID provided');
       setLoading(false);
@@ -105,11 +105,11 @@ export default function ResultsPage() {
       setError('Network error. Please try again.');
       setLoading(false);
     }
-  };
+  }, [taskId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     checkTaskStatus();
-  }, [taskId]);
+  }, [checkTaskStatus]);
 
   const riskLabel = result?.risk_label || 'LOW';
   const riskColor = RISK_COLORS[riskLabel] || 'text-green-400';

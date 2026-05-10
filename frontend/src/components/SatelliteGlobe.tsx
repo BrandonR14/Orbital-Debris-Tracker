@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import Globe from 'react-globe.gl';
+import type { SatRec } from 'satellite.js';
 import { authenticatedFetch } from '@/utils/auth';
 
 interface TLERecord {
@@ -39,10 +40,13 @@ const TRAIL_STEPS = 20;
 const TRAIL_MINUTES = 10;
 
 export default function SatelliteGlobe() {
+  // react-globe.gl doesn't export its imperative instance type; any is correct here
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const globeRef = useRef<any>(null);
-  const satrecsRef = useRef<Map<string, any>>(new Map());
+  const satrecsRef = useRef<Map<string, SatRec>>(new Map());
   const tleDataRef = useRef<TLERecord[]>([]);
-  const satLibRef = useRef<any>(null);
+  // satellite.js has no exported namespace type; typed as unknown and cast at call sites
+  const satLibRef = useRef<unknown>(null);
 
   const [points, setPoints] = useState<SatPoint[]>([]);
   const [arcs, setArcs] = useState<ArcPoint[]>([]);
@@ -51,7 +55,7 @@ export default function SatelliteGlobe() {
   const [dimensions, setDimensions] = useState({ width: 500, height: 500 });
   const containerRef = useRef<HTMLDivElement>(null);
 
-  function propagate(satrec: any, sat: any, date: Date) {
+  function propagate(satrec: SatRec, sat: typeof import('satellite.js'), date: Date) {
     try {
       const pv = sat.propagate(satrec, date);
       if (!pv?.position) return null;
@@ -68,7 +72,7 @@ export default function SatelliteGlobe() {
   }
 
   const computePositions = useCallback(() => {
-    const sat = satLibRef.current;
+    const sat = satLibRef.current as typeof import('satellite.js') | null;
     if (!sat || satrecsRef.current.size === 0) return;
 
     const now = new Date();
@@ -108,7 +112,7 @@ export default function SatelliteGlobe() {
   }, []);
 
   const loadTLEs = useCallback(async () => {
-    const sat = satLibRef.current;
+    const sat = satLibRef.current as typeof import('satellite.js') | null;
     if (!sat) { setStatus('error'); return; }
 
     try {
@@ -206,9 +210,11 @@ export default function SatelliteGlobe() {
         pointsData={points}
         pointLat="lat"
         pointLng="lng"
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         pointAltitude={(d: any) => Math.max(0.005, (d.alt || 0) / 6371)}
         pointColor="color"
         pointRadius={0.35}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         pointLabel={(d: any) =>
           `<div style="background:rgba(0,0,0,0.85);padding:6px 10px;border-radius:6px;font-family:monospace;font-size:12px;color:#FFD700;border:1px solid rgba(255,215,0,0.3)">${d.name}<br/><span style="color:#aaa">NORAD ${d.norad_id}</span></div>`
         }
@@ -218,6 +224,7 @@ export default function SatelliteGlobe() {
         arcStartLng="startLng"
         arcEndLat="endLat"
         arcEndLng="endLng"
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         arcColor={(d: any) => [`${d.color}00`, `${d.color}88`, `${d.color}cc`]}
         arcStroke={0.4}
         arcDashLength={0.4}

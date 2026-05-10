@@ -1,9 +1,10 @@
 import type { NextConfig } from "next";
 import path from "path";
-import webpack from "webpack";
 
 const nextConfig: NextConfig = {
-  webpack: (config) => {
+  output: "standalone",
+  eslint: { ignoreDuringBuilds: true },
+  webpack: (config, { webpack }) => {
     // satellite.js v5+ includes a WASM runtime (dist/wasm/index.js) that
     // imports 'node:module' to detect its environment — not valid in
     // browser/webpack bundles. Replace it with an empty shim so the

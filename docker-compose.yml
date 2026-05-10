@@ -1,22 +1,63 @@
-version: '3.9'
 services:
-  django:
-    build: ./django_backend
-    volumes:
-      - ./django_backend:/app
-    ports:
-      - "8000:8000"
-    env_file:
-      - .env
 
   redis:
-    image: redis:7
+    image: redis:7-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  django:
+    build: ./django_backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./django_backend:/app
+      - sqlite_data:/app/db
+    env_file: .env
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+    command: python manage.py runserver 0.0.0.0:8000
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  celery:
+    build: ./django_backend
+    restart: unless-stopped
+    volumes:
+      - ./django_backend:/app
+      - sqlite_data:/app/db
+    env_file: .env
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+    command: celery -A django_backend worker --loglevel=info
+    depends_on:
+      redis:
+        condition: service_healthy
+      django:
+        condition: service_started
 
   fastapi:
     build: ./fastapi_microservice
+    restart: unless-stopped
     ports:
       - "9000:9000"
     volumes:
       - ./fastapi_microservice:/app
-    env_file:
-      - .env
+    env_file: .env
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      - django
+      - fastapi
+
+volumes:
+  sqlite_data:

@@ -51,8 +51,8 @@ export default function HistoryPage() {
         if (!resp.ok) throw new Error('Failed to load history');
         const data = await resp.json();
         setRecords(data);
-      } catch (e: any) {
-        setError(e.message || 'Unknown error');
+      } catch (e) {
+        setError(e instanceof Error ? e.message : 'Unknown error');
       } finally {
         setLoading(false);
       }

@@ -179,17 +179,17 @@ export default function HomePage() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <SectionLabel>The Problem</SectionLabel>
-              <SectionHeading>Earth's orbit is getting crowded</SectionHeading>
+              <SectionHeading>Earth&apos;s orbit is getting crowded</SectionHeading>
               <p className="text-gray-300 leading-relaxed mb-4">
-                There are more than 25,000 objects larger than 10 cm orbiting Earth right now —
-                including active satellites, spent rocket stages, and fragments from past collisions
+                There are more than 25,000 objects larger than 10 cm orbiting Earth right now.
+                This includes active satellites, spent rocket stages, and fragments from past collisions
                 and explosions. At orbital velocities of 7–8 km/s, even a paint fleck carries
                 the energy of a bullet.
               </p>
               <p className="text-gray-300 leading-relaxed mb-6">
                 In 1978, NASA scientist Donald Kessler proposed that beyond a certain debris density,
-                collisions would generate enough new fragments to trigger a chain reaction — the
-                <span className="text-yellow-400 font-medium"> Kessler Syndrome</span> — potentially
+                collisions would generate enough new fragments to trigger a chain reaction  ( the
+                <span className="text-yellow-400 font-medium"> Kessler Syndrome</span> ) potentially
                 rendering entire orbital shells unusable for generations.
               </p>
               <p className="text-gray-300 leading-relaxed">
@@ -226,7 +226,7 @@ export default function HomePage() {
             <SectionLabel>Orbital Data</SectionLabel>
             <SectionHeading>What is a Two-Line Element set?</SectionHeading>
             <p className="text-gray-300 max-w-2xl mx-auto">
-              A TLE is the standard format for describing a satellite's orbit. Every tracked
+              A TLE is the standard format for describing a satellite&apos;s orbit. Every tracked
               object has one, updated regularly as ground stations refine their measurements.
             </p>
           </div>
@@ -276,10 +276,10 @@ export default function HomePage() {
                 Describes how much atmospheric drag slows the satellite. Higher drag means faster orbital decay for LEO objects.
               </TLEAnnotation>
               <TLEAnnotation label="Inclination" color="bg-cyan-400">
-                Angle of the orbital plane relative to the equator in degrees. 51.6° for ISS — it passes over most populated latitudes.
+                Angle of the orbital plane relative to the equator in degrees. 51.6° for ISS, it passes over most populated latitudes.
               </TLEAnnotation>
               <TLEAnnotation label="RAAN" color="bg-red-400">
-                Right Ascension of the Ascending Node — where the orbit crosses the equator going northward, measured from the vernal equinox.
+                Right Ascension of the Ascending Node: where the orbit crosses the equator going northward, measured from the vernal equinox.
               </TLEAnnotation>
               <TLEAnnotation label="Eccentricity" color="bg-emerald-400">
                 How elliptical the orbit is (0 = perfect circle, 1 = parabolic). Most LEO satellites aim for near-zero eccentricity.
@@ -296,7 +296,7 @@ export default function HomePage() {
               <div>
                 <h4 className="text-white font-semibold mb-1">Where do TLEs come from?</h4>
                 <p className="text-gray-300 text-sm leading-relaxed">
-                  The US Space Force's 18th Space Control Squadron operates a global network of
+                  The US Space Force&apos;s 18th Space Control Squadron operates a global network of
                   radar and optical sensors that continuously track orbital objects. The observations
                   are processed using orbit determination software to produce updated TLEs, published
                   publicly through <span className="text-yellow-400">Space-Track.org</span>. This
@@ -335,7 +335,7 @@ export default function HomePage() {
                   number="2"
                   icon={Satellite}
                   title="SGP4 orbital propagation"
-                  body="The Simplified General Perturbations model 4 (SGP4) integrates the equations of motion forward in time, accounting for Earth's oblateness, atmospheric drag, and other perturbations. Both satellites are propagated at 5-minute intervals across a 7-day window — 2,016 position samples each."
+                  body="The Simplified General Perturbations model 4 (SGP4) integrates the equations of motion forward in time, accounting for Earth's oblateness, atmospheric drag, and other perturbations. Both satellites are propagated at 5-minute intervals across a 7-day window, which means 2,016 position samples each."
                 />
                 <StepCard
                   number="3"
@@ -347,7 +347,7 @@ export default function HomePage() {
                   number="4"
                   icon={Brain}
                   title="ML risk classification"
-                  body="A Random Forest classifier trained on 15,000 synthetic conjunction events evaluates five features — miss distance, relative velocity, altitude, collision probability, and time to TCA — and outputs a HIGH / MEDIUM / LOW risk label with per-class confidence scores."
+                  body="A Random Forest classifier trained on 15,000 synthetic conjunction events evaluates five features: miss distance, relative velocity, altitude, collision probability, and time to TCA. It also outputs a HIGH / MEDIUM / LOW risk label with per-class confidence scores."
                 />
               </div>
             </div>
@@ -365,7 +365,7 @@ export default function HomePage() {
                   Industry thresholds: conjunctions inside <span className="text-white font-medium">1 km</span> are
                   screened, inside <span className="text-white font-medium">200 m</span> may trigger
                   a maneuver decision. An actual physical collision requires a miss distance smaller
-                  than the combined object size — typically a few metres.
+                  than the combined object size, typically a few metres.
                 </p>
               </Card>
 
@@ -375,7 +375,7 @@ export default function HomePage() {
                 </h4>
                 <p className="text-gray-300 text-sm leading-relaxed">
                   Computed using a 2D Gaussian model in the encounter plane. It combines the miss
-                  distance with the combined positional uncertainty (how well we know both objects'
+                  distance with the combined positional uncertainty (how well we know both objects&apos;
                   locations) and the combined cross-sectional area. Values above
                   <span className="text-white font-medium"> 1-in-10,000</span> are generally
                   considered operationally significant.
@@ -390,7 +390,7 @@ export default function HomePage() {
                   The speed at which the two objects approach each other at TCA, derived directly
                   from SGP4 velocity vectors. Impacts above approximately
                   <span className="text-white font-medium"> 3 km/s</span> exceed the Whipple shield
-                  threshold — the energy is sufficient to shatter both objects rather than dent them,
+                  threshold; the energy is sufficient to shatter both objects rather than dent them,
                   generating thousands of new trackable fragments.
                 </p>
               </Card>
@@ -401,7 +401,7 @@ export default function HomePage() {
                 </h4>
                 <p className="text-gray-300 text-sm leading-relaxed">
                   The Gaussian probability formula treats all conjunctions identically. The ML model
-                  learns non-linear interactions — for instance, a 500 m miss at 14 km/s in LEO is
+                  learns non-linear interactions, for instance, a 500 m miss at 14 km/s in LEO is
                   operationally very different from 500 m at 0.5 km/s in GEO. The classifier was
                   trained on synthetic events spanning all orbit regimes and velocity ranges,
                   then tested on a held-out set to validate accuracy.

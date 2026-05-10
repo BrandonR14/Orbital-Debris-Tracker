@@ -39,7 +39,7 @@ export default function LoginPage() {
       } else {
         setError(data.detail || 'Login failed. Please check your credentials.');
       }
-    } catch (err) {
+    } catch {
       setError('Network error. Please try again.');
     } finally {
       setLoading(false);
@@ -139,7 +139,7 @@ export default function LoginPage() {
           {/* Register Link */}
           <div className="text-center">
             <p className="text-gray-300 text-sm">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <Link 
                 href="/register" 
                 className="text-yellow-400 hover:text-yellow-300 font-medium transition-colors"
