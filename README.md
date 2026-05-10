@@ -267,11 +267,11 @@ Orbital-Debris-Tracker/
 ## 📸 Screenshots
 
 ### Login Page:
-![alt text](<c:/Users/brand/OneDrive/Pictures/Screenshots/Screenshot 2026-05-09 234934.png>)
+*(screenshot — upload to repo assets to display here)*
 
 ### Home Page Preview:
-<video controls src="Desktop 2026.05.10 - 00.15.27.04.mp4" title="Home Page"></video>
+*(demo video — too large for GitHub; run locally to see the live globe)*
 
 ### Prediction Preview:
-<video controls src="Desktop 2026.05.10 - 00.52.47.06.mp4" title="Prediction Example"></video>
+*(demo video — too large for GitHub; run locally to see the prediction pipeline)*
 ---

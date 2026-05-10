@@ -10,5 +10,10 @@ __pycache__/
 # Environment files
 .env
 
-# Django stuff 
+# Django stuff
 db.sqlite3
+
+# Large media files (too big for GitHub)
+*.mp4
+*.mov
+*.avi
