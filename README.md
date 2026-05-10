@@ -267,7 +267,7 @@ Orbital-Debris-Tracker/
 ## 📸 Screenshots
 
 ### Login Page:
-*(screenshot — upload to repo assets to display here)*
+<img width="1856" height="901" alt="Image" src="https://github.com/user-attachments/assets/f63c3097-61a6-4a54-8236-a15a2dc26d9e" />
 
 ### Home Page Preview:
 *(demo video — too large for GitHub; run locally to see the live globe)*
