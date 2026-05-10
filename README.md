@@ -11,7 +11,7 @@
 ![Redis](https://img.shields.io/badge/Redis-7-DC382D?style=flat&logo=redis&logoColor=white)
 ![Celery](https://img.shields.io/badge/Celery-5.5-37814A?style=flat)
 
-With over 9,000 active satellites in orbit and millions of debris fragments travelling at up to 28,000 km/h, conjunction analysis is one of the most critical challenges in modern space operations. This application lets users select any two tracked objects, trigger a full orbital propagation pipeline, and receive an ML-classified risk assessment — all in under 30 seconds.
+With over 9,000 active satellites in orbit and millions of debris fragments travelling at up to 28,000 km/h, conjunction analysis is one of the most critical challenges in modern space operations. This application lets users select any two tracked objects, trigger a full orbital propagation pipeline, and receive an ML-classified risk assessment. All in under 30 seconds.
 
 ---
 
