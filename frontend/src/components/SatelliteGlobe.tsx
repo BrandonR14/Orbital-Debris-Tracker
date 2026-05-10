@@ -126,7 +126,7 @@ export default function SatelliteGlobe() {
       }
 
       tleDataRef.current = data;
-      const newSatrecs = new Map<string, any>();
+      const newSatrecs = new Map<string, SatRec>();
       const newLegend: { name: string; color: string }[] = [];
 
       data.forEach((record, idx) => {

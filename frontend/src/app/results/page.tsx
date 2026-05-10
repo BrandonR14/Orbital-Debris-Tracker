@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { getStoredUser, logout, authenticatedFetch } from '@/utils/auth';
 import Link from 'next/link';
 import {
   Loader2, LogOut, Satellite, BarChart3, CheckCircle,
-  XCircle, ArrowLeft, History, Zap, Globe,
+  XCircle, ArrowLeft, History, Zap, Globe, Clock,
 } from 'lucide-react';
 
 interface RiskProbabilities {
@@ -51,7 +51,7 @@ const RISK_BORDER: Record<string, string> = {
   LOW: 'border-green-500/30 bg-green-500/10',
 };
 
-export default function ResultsPage() {
+function ResultsPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const taskId = searchParams.get('task_id');
@@ -68,7 +68,7 @@ export default function ResultsPage() {
     router.push('/login');
   };
 
-  const checkTaskStatus = useCallback(async () => {
+  const checkTaskStatus = async () => {
     if (!taskId) {
       setError('No task ID provided');
       setLoading(false);
@@ -101,15 +101,15 @@ export default function ResultsPage() {
       } else {
         setTimeout(checkTaskStatus, 2000);
       }
-    } catch {
+    } catch (err) {
       setError('Network error. Please try again.');
       setLoading(false);
     }
-  }, [taskId]); // eslint-disable-line react-hooks/exhaustive-deps
+  };
 
   useEffect(() => {
     checkTaskStatus();
-  }, [checkTaskStatus]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const riskLabel = result?.risk_label || 'LOW';
   const riskColor = RISK_COLORS[riskLabel] || 'text-green-400';
@@ -342,5 +342,13 @@ export default function ResultsPage() {
         </main>
       </div>
     </ProtectedRoute>
+  );
+}
+
+export default function ResultsPage() {
+  return (
+    <Suspense>
+      <ResultsPageContent />
+    </Suspense>
   );
 }

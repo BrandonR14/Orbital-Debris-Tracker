@@ -179,7 +179,7 @@ export default function HomePage() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <SectionLabel>The Problem</SectionLabel>
-              <SectionHeading>Earth&apos;s orbit is getting crowded</SectionHeading>
+              <SectionHeading>Earth's orbit is getting crowded</SectionHeading>
               <p className="text-gray-300 leading-relaxed mb-4">
                 There are more than 25,000 objects larger than 10 cm orbiting Earth right now.
                 This includes active satellites, spent rocket stages, and fragments from past collisions
@@ -226,7 +226,7 @@ export default function HomePage() {
             <SectionLabel>Orbital Data</SectionLabel>
             <SectionHeading>What is a Two-Line Element set?</SectionHeading>
             <p className="text-gray-300 max-w-2xl mx-auto">
-              A TLE is the standard format for describing a satellite&apos;s orbit. Every tracked
+              A TLE is the standard format for describing a satellite's orbit. Every tracked
               object has one, updated regularly as ground stations refine their measurements.
             </p>
           </div>
@@ -296,7 +296,7 @@ export default function HomePage() {
               <div>
                 <h4 className="text-white font-semibold mb-1">Where do TLEs come from?</h4>
                 <p className="text-gray-300 text-sm leading-relaxed">
-                  The US Space Force&apos;s 18th Space Control Squadron operates a global network of
+                  The US Space Force's 18th Space Control Squadron operates a global network of
                   radar and optical sensors that continuously track orbital objects. The observations
                   are processed using orbit determination software to produce updated TLEs, published
                   publicly through <span className="text-yellow-400">Space-Track.org</span>. This
@@ -375,7 +375,7 @@ export default function HomePage() {
                 </h4>
                 <p className="text-gray-300 text-sm leading-relaxed">
                   Computed using a 2D Gaussian model in the encounter plane. It combines the miss
-                  distance with the combined positional uncertainty (how well we know both objects&apos;
+                  distance with the combined positional uncertainty (how well we know both objects'
                   locations) and the combined cross-sectional area. Values above
                   <span className="text-white font-medium"> 1-in-10,000</span> are generally
                   considered operationally significant.
